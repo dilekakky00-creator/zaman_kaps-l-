@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zaman Kapsülü - Geleceğe Dijital Kapsül ✨</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cinzel (Mistik/Nostaljik), Outfit & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --gold-primary: #f59e0b;
+      --gold-light: #fef08a;
+      --gold-glow: rgba(245, 158, 11, 0.4);
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: radial-gradient(circle at 50% 20%, #161938 0%, #0c0e23 60%, #050611 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .font-cinzel {
+      font-family: 'Cinzel', serif;
+    }
+
+    .font-letter {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    .glass-panel {
+      background: rgba(18, 22, 51, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7), 0 0 24px -6px rgba(245, 158, 11, 0.15);
+    }
+
+    .glass-input {
+      background: rgba(10, 13, 34, 0.65);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #f8fafc;
+      transition: all 0.25s ease;
+    }
+    .glass-input:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
+      background: rgba(15, 19, 48, 0.85);
+    }
+
+    /* Yıldız Animasyonu */
+    .star-twinkle {
+      position: absolute;
+      border-radius: 9999px;
+      background: #ffffff;
+      pointer-events: none;
+      animation: twinkleAnim 4s infinite ease-in-out;
+    }
+
+    @keyframes twinkleAnim {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 0.95; transform: scale(1.2); }
+    }
+
+    /* Mühür Titreşimi */
+    @keyframes sealPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.4)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.7)); }
+    }
+    .seal-animated {
+      animation: sealPulse 3s infinite ease-in-out;
+    }
+
+    /* Kum Akışı Animasyonu */
+    @keyframes sandTrickle {
+      0% { opacity: 0.3; transform: scaleY(0.7); }
+      50% { opacity: 1; transform: scaleY(1.05); }
+      100% { opacity: 0.3; transform: scaleY(0.7); }
+    }
+    .sand-stream-anim {
+      animation: sandTrickle 1.2s infinite ease-in-out;
+      transform-origin: top center;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 19, 48, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(245, 158, 11, 0.4);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(245, 158, 11, 0.7);
+    }
+  </style>
+</head>
+<body class="relative flex flex-col justify-between select-none min-h-screen">
+
+  <!-- Arka Plan Yıldız Parıltıları -->
+  <div id="starfield" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+  <!-- 1. KULLANICI GİRİŞ VE KAYIT EKRANI (AUTH) -->
+  <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl">
+    <div class="glass-panel w-full max-w-md p-8 rounded-3xl relative flex flex-col items-center text-center shadow-2xl border-amber-400/40">
+      
+      <!-- Mistik Zaman Mührü Amblemi -->
+      <div class="w-20 h-20 -mt-16 mb-3 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-300 p-[2px] shadow-2xl seal-animated flex items-center justify-center">
+        <div class="w-full h-full rounded-full bg-slate-950 flex items-center justify-center text-3xl">
+          ⏳
+        </div>
+      </div>
+
+      <h2 id="auth-title" class="text-2xl font-cinzel font-bold text-amber-100">Zaman Kapsülü'ne Hoş Geldin</h2>
+      <p id="auth-subtitle" class="text-xs text-slate-300/80 mb-6 font-light">Geleceğe gizli mektuplar mühürlemek için giriş yap veya yeni bir kayıt oluştur.</p>
+
+      <!-- Giriş / Kayıt Sekmeleri -->
+      <div class="flex w-full bg-black/40 p-1 rounded-2xl mb-5 border border-white/10">
+        <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-cinzel font-bold rounded-xl transition bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow">
+          Giriş Yap
+        </button>
+        <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-cinzel font-bold rounded-xl transition text-slate-300 hover:text-white">
+          Kayıt Ol
+        </button>
+      </div>
+
+      <form onsubmit="handleAuthSubmit(event)" class="w-full flex flex-col gap-3.5 text-left">
+        <div>
+          <label class="block text-xs font-cinzel font-bold text-amber-200 mb-1 pl-1">Gezgin Adı (Kullanıcı Adı)</label>
+          <input type="text" id="auth-username" required placeholder="ör: zaman_yolcusu" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm">
+        </div>
+
+        <div>
+          <label class="block text-xs font-cinzel font-bold text-amber-200 mb-1 pl-1">Gizli Şifre</label>
+          <input type="password" id="auth-password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl glass-input text-sm">
+        </div>
+
+        <button type="submit" id="auth-submit-btn" class="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-slate-950 font-cinzel font-bold text-sm hover:scale-[1.01] active:scale-[0.98] transition shadow-lg shadow-amber-500/20">
+          Kapsül Odasına Gir ✨
+        </button>
+
+        <div id="auth-msg" class="text-xs font-medium text-center min-h-[1.25rem]"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. ANA UYGULAMA ALANI -->
+  <div id="main-app" class="relative z-10 max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6 hidden">
+    
+    <!-- Üst Menü & Karşılama Başlığı -->
+    <header class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border-amber-400/30">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-2xl shadow-lg ring-2 ring-amber-400/30">
+          ⏳
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-cinzel font-bold text-amber-100">Zaman Kapsülü</h1>
+            <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 font-cinzel tracking-wider">MÜHÜRLÜ ANILAR</span>
+          </div>
+          <p class="text-xs text-slate-300/80">Bugünün duygularını geleceğe sakla, vakti geldiğinde mührü kır ✨</p>
+        </div>
+      </div>
+
+      <!-- Kullanıcı Karşılaması & Aksiyonlar -->
+      <div class="flex items-center flex-wrap gap-2.5 text-xs font-semibold">
+        <div class="px-3.5 py-2 rounded-2xl bg-white/5 border border-white/10 text-amber-100 flex items-center gap-1.5 font-cinzel">
+          <span>Hoş geldin,</span>
+          <span id="display-user" class="text-amber-300 font-bold">Gezgin</span>
+          <span>✨</span>
+        </div>
+
+        <!-- Kod ile Kapsül Açma / Ekleme Butonu -->
+        <button onclick="openEnterCodeModal()" class="px-3.5 py-2 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 font-cinzel text-[11px] transition flex items-center gap-1.5 shadow">
+          <span>🔑</span> Kapsül Kodu Gir
+        </button>
+
+        <button onclick="logout()" class="px-3 py-2 rounded-2xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-200 font-cinzel text-[11px] transition flex items-center gap-1">
+          🚪 Çıkış
+        </button>
+      </div>
+    </header>
+
+    <!-- Sekme Geçiş Butonları: Kapsüllerim vs. Yeni Kapsül -->
+    <div class="flex items-center justify-center gap-3">
+      <button onclick="switchView('list')" id="nav-btn-list" class="px-5 py-2.5 rounded-2xl font-cinzel font-bold text-xs transition flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-lg">
+        <span>📜</span> Kapsüllerim & Mühürler (<span id="capsule-count-badge">0</span>)
+      </button>
+      <button onclick="switchView('create')" id="nav-btn-create" class="px-5 py-2.5 rounded-2xl font-cinzel font-bold text-xs transition flex items-center gap-2 glass-panel text-amber-200 hover:text-white">
+        <span>✍️</span> Yeni Kapsül Mühürle
+      </button>
+    </div>
+
+    <!-- 3. YENİ KAPSÜL OLUŞTURMA ALANI -->
+    <div id="view-create" class="glass-panel rounded-3xl p-6 sm:p-8 flex flex-col gap-6 hidden border-amber-400/35">
+      <div class="border-b border-white/10 pb-4">
+        <h2 class="text-lg font-cinzel font-bold text-amber-200 flex items-center gap-2">
+          <span>💌</span> Geleceğe Mektup Mühürle
+        </h2>
+        <p class="text-xs text-slate-300 mt-1">Bu mektup, fotoğraflar ve şarkı belirlediğin tarihe kadar tamamen kilitli kalacak ve asla dışarıdan görülemeyecektir.</p>
+      </div>
+
+      <form onsubmit="handleCreateCapsule(event)" class="flex flex-col gap-5 text-xs">
+        
+        <!-- Başlık ve Ruh Hali -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block font-cinzel font-bold text-amber-200 mb-1 pl-1">Kapsül Başlığı</label>
+            <input type="text" id="cap-title" required placeholder="ör: 25 Yaşındaki Kendime Mektup" class="w-full px-4 py-2.5 rounded-xl glass-input text-xs">
+          </div>
+          <div>
+            <label class="block font-cinzel font-bold text-amber-200 mb-1 pl-1">Bugünkü Ruh Halin</label>
+            <select id="cap-mood" class="w-full px-3 py-2.5 rounded-xl glass-input text-xs bg-slate-900">
+              <option value="✨ Umutlu & İlham Dolu">✨ Umutlu & İlham Dolu</option>
+              <option value="☕ Huzurlu & Dingin">☕ Huzurlu & Dingin</option>
+              <option value="🌱 Biraz Yorgun ama Güçlü">🌱 Biraz Yorgun ama Güçlü</option>
+              <option value="🚀 Büyük Hayaller Peşinde">🚀 Büyük Hayaller Peşinde</option>
+              <option value="💌 Sevgi & Şefkat Dolu">💌 Sevgi & Şefkat Dolu</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mektup İçeriği -->
+        <div>
+          <label class="block font-cinzel font-bold text-amber-200 mb-1 pl-1">Gelecekteki Kendine / Sevdiklerine Mektubun (Açılana Kadar Tamamen Gizlidir)</label>
+          <textarea id="cap-message" required rows="6" placeholder="Bugün neler yaşıyorsun? Neleri unutmamasını istersin? Hangi hedeflerinden bahsediyorsun? Buraya içinden gelen her şeyi dök..." class="w-full px-4 py-3 rounded-xl glass-input text-xs font-letter leading-relaxed resize-none"></textarea>
+        </div>
+
+        <!-- Çoklu Fotoğraf Yükleme Alanı -->
+        <div>
+          <div class="flex items-center justify-between mb-1 pl-1">
+            <label class="font-cinzel font-bold text-amber-200">Fotoğraflar Ekle (İstediğin Kadar)</label>
+            <span id="photo-count-label" class="text-[11px] text-amber-300">0 fotoğraf seçildi</span>
+          </div>
+
+          <label class="cursor-pointer border-2 border-dashed border-amber-400/40 hover:border-amber-400/80 rounded-2xl p-5 flex flex-col items-center justify-center transition bg-amber-500/5 hover:bg-amber-500/10">
+            <span class="text-2xl mb-1">📸</span>
+            <span class="font-cinzel font-bold text-amber-200 text-xs">Fotoğraf Seç veya Buraya Bırak</span>
+            <span class="text-[10px] text-slate-400 mt-1">Birden fazla fotoğraf yükleyebilirsin (Otomatik optimize edilir)</span>
+            <input type="file" id="cap-photos-input" multiple accept="image/*" onchange="handlePhotoUpload(event)" class="hidden">
+          </label>
+
+          <!-- Fotoğraf Önizleme Listesi -->
+          <div id="photos-preview-gallery" class="flex flex-wrap gap-3 mt-3"></div>
+        </div>
+
+        <!-- Dinlenen Şarkı -->
+        <div>
+          <label class="block font-cinzel font-bold text-amber-200 mb-1 pl-1">Bugün Dinlediğin Şarkı (Spotify, YouTube veya İsim)</label>
+          <input type="text" id="cap-song" placeholder="ör: Ludovico Einaudi - Nuvole Bianche" class="w-full px-4 py-2.5 rounded-xl glass-input text-xs">
+          <p class="text-[10px] text-slate-400 mt-1 pl-1">Şarkı bilgisi de kilit açılana kadar kimseye gösterilmeyecektir.</p>
+        </div>
+
+        <!-- Açılış Zamanı ve Hızlı Butonlar -->
+        <div class="p-4 rounded-2xl bg-black/30 border border-white/10 flex flex-col gap-3">
+          <label class="font-cinzel font-bold text-amber-200">Kapsülün Açılacağı Tarih ve Saat</label>
+          
+          <input type="datetime-local" id="cap-unlock-date" required class="w-full px-4 py-2.5 rounded-xl glass-input text-xs font-mono">
+
+          <div class="flex items-center flex-wrap gap-2 text-[11px] font-cinzel">
+            <span class="text-slate-400">Hızlı Seçim:</span>
+            <button type="button" onclick="setQuickUnlockMinutes(1)" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/30">
+              ⚡ 1 Dakika (Hızlı Test)
+            </button>
+            <button type="button" onclick="setQuickUnlockDays(7)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200">
+              1 Hafta
+            </button>
+            <button type="button" onclick="setQuickUnlockDays(30)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200">
+              1 Ay
+            </button>
+            <button type="button" onclick="setQuickUnlockDays(365)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200">
+              1 Yıl
+            </button>
+          </div>
+        </div>
+
+        <!-- Kapsül Parolası -->
+        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30 flex flex-col gap-2">
+          <label class="font-cinzel font-bold text-amber-200 flex items-center gap-1.5">
+            <span>🔒</span> Kapsül Açılış Parolası (Zorunlu)
+          </label>
+          <p class="text-[11px] text-slate-300">Bu kapsülü hem sen hem de kodunu paylaştığın sevdiklerin açarken bu parola gerekecektir.</p>
+          <input type="text" id="cap-password" required placeholder="ör: ilkbahar2026 veya gizli kelime" class="w-full px-4 py-2 rounded-xl glass-input text-xs">
+        </div>
+
+        <!-- Mühürleme Butonu -->
+        <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 text-slate-950 font-cinzel font-bold text-sm shadow-xl hover:scale-[1.01] active:scale-[0.98] transition flex items-center justify-center gap-2 mt-2">
+          <span>🕯️</span> Kapsülü Mühürle ve Özel Kod Üret ✨
+        </button>
+      </form>
+    </div>
+
+    <!-- 4. KAPSÜLLERİM LİSTESİ VE AKAN KUM SAATİ GÖRÜNÜMÜ -->
+    <div id="view-list" class="flex flex-col gap-5">
+      
+      <!-- Liste Başlığı -->
+      <div class="flex items-center justify-between text-xs font-cinzel px-2">
+        <span class="text-amber-200 font-bold uppercase tracking-wider flex items-center gap-2">
+          <span>📜</span> Mühürlü Sandığın
+        </span>
+        <span class="text-slate-400">Canlı Akan Kum Saatleri ⏳</span>
+      </div>
+
+      <!-- Kapsül Kartları Konteyneri -->
+      <div id="capsules-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+
+      <!-- Boş Durum (Empty State: En Başta Tamamen Boştur) -->
+      <div id="empty-state" class="glass-panel rounded-3xl p-10 text-center flex flex-col items-center justify-center gap-3 border-dashed border-amber-400/30 hidden">
+        <div class="text-4xl">📭</div>
+        <h3 class="font-cinzel font-bold text-amber-100 text-base">Henüz Mühürlü Kapsülün Yok</h3>
+        <p class="text-xs text-slate-300 max-w-sm">Gelecekteki kendine ilk mektubunu yaz veya bir yakınının sana verdiği kapsül kodunu girerek sandığına ekle.</p>
+        <div class="flex flex-wrap items-center justify-center gap-3 mt-2">
+          <button onclick="switchView('create')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-cinzel font-bold text-xs shadow-md hover:scale-105 transition">
+            İlk Kapsülünü Mühürle ✍️
+          </button>
+          <button onclick="openEnterCodeModal()" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-amber-200 border border-white/20 font-cinzel text-xs transition">
+            🔑 Kod ile Kapsül Ekle
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 5. KAPSÜL KODU GİRİŞ MODALI (BAŞKASININ KODUNU EKLEME) -->
+  <div id="modal-enter-code" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="glass-panel w-full max-w-sm rounded-3xl p-6 text-center border-amber-400/50 shadow-2xl relative">
+      <button onclick="closeEnterCodeModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs transition">✕</button>
+
+      <div class="text-3xl mb-2">🔑</div>
+      <h3 class="text-base font-cinzel font-bold text-amber-100">Kapsül Kodu Gir</h3>
+      <p class="text-[11px] text-slate-300 mt-1 mb-4">Bir yakınının seninle paylaştığı kapsül kodunu (örn: <span class="text-amber-300 font-mono">ZK-8492</span>) buraya yazarak sandığına ekleyebilirsin.</p>
+
+      <form onsubmit="handleCodeLookupSubmit(event)" class="space-y-3">
+        <input type="text" id="input-capsule-code" required placeholder="ör: ZK-8492" class="w-full px-4 py-2.5 rounded-xl glass-input text-xs text-center font-mono uppercase tracking-widest text-sm">
+        <div id="code-lookup-error" class="text-xs text-rose-400 min-h-[1.2rem]"></div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 text-slate-950 font-cinzel font-bold text-xs shadow-lg hover:brightness-105 transition">
+          Kapsülü Bul & Sandığa Ekle ✨
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. KAPSÜLE ÖZEL KOD PAYLAŞIM MODALI -->
+  <div id="modal-code-share" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="glass-panel w-full max-w-sm rounded-3xl p-6 text-center border-amber-400/50 shadow-2xl relative">
+      <button onclick="closeShareCodeModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs transition">✕</button>
+
+      <div class="text-3xl mb-1">💌</div>
+      <h3 class="text-base font-cinzel font-bold text-amber-100" id="share-modal-title">Kapsül Paylaşım Kodu</h3>
+      <p class="text-[11px] text-slate-300 mt-1 mb-4">Bu kodu sevdiklerinle paylaş. Onlar da "Kapsül Kodu Gir" butonundan bu kodu yazarak sandıklarına ekleyebilirler.</p>
+
+      <div class="p-4 rounded-2xl bg-black/60 border-2 border-amber-400/50 mb-4 flex flex-col items-center justify-center gap-1">
+        <div class="text-[10px] font-cinzel text-slate-400 uppercase tracking-widest">ÖZEL PAYLAŞIM KODU</div>
+        <div id="share-display-code" class="text-2xl font-mono font-bold text-amber-300 tracking-wider">ZK-XXXX</div>
+        <div class="text-[10px] text-slate-400 mt-1" id="share-display-unlock-date">Açılış: --</div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/30 text-[11px] text-amber-200/90 mb-4 text-left">
+        💡 <strong>Not:</strong> Karşı taraf bu kapsülün içindeki mektup, şarkı veya fotoğrafları zamanı dolmadan göremez. Süre bittiğinde belirlediğiniz şifreyi girerek açabilir.
+      </div>
+
+      <button onclick="copyCurrentShareCode()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-slate-950 font-cinzel font-bold text-xs shadow-md hover:brightness-105 transition flex items-center justify-center gap-1.5">
+        <span>📋</span> Kodu Panoya Kopyala
+      </button>
+    </div>
+  </div>
+
+  <!-- 7. KAPSÜL İÇERİĞİNİ GÖRÜNTÜLEME MODALI (SADECE PAROLA DOĞRULANINCA AÇILIR) -->
+  <div id="modal-content" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="glass-panel w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-6 sm:p-8 border-amber-400/60 shadow-2xl relative">
+      
+      <button onclick="closeContentModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs transition">✕</button>
+
+      <!-- Üst Başlık & Açılış Mührü -->
+      <div class="text-center pb-5 border-b border-white/10">
+        <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-cinzel text-[11px] mb-2 font-bold">
+          🔓 MÜHÜR AÇILDI • ZAMANIN YOLCULUĞU
+        </div>
+        <h2 id="content-modal-title" class="text-2xl font-cinzel font-bold text-amber-100">Kapsül Başlığı</h2>
+        <div class="flex items-center justify-center gap-3 text-xs text-slate-300 mt-2">
+          <span id="content-modal-created">Mühürlenme: --</span>
+          <span>•</span>
+          <span id="content-modal-mood" class="text-amber-300">Ruh Hali: --</span>
+        </div>
+      </div>
+
+      <!-- Mektup Alanı (Vintage Kağıt Hissi) -->
+      <div class="my-6 p-6 rounded-2xl bg-amber-950/20 border border-amber-400/30 font-letter text-sm sm:text-base leading-relaxed text-amber-50 whitespace-pre-line shadow-inner" id="content-modal-message">
+        Mektup içeriği burada görünecek...
+      </div>
+
+      <!-- Dinlenen Şarkı -->
+      <div id="content-song-box" class="p-4 rounded-2xl bg-white/5 border border-white/10 mb-6 flex items-center gap-3 text-xs">
+        <span class="text-2xl">🎵</span>
+        <div class="flex-1">
+          <div class="font-cinzel text-amber-200 font-bold">O Gün Dinlenen Şarkı</div>
+          <div id="content-modal-song" class="text-slate-300 mt-0.5 break-all">Şarkı bilgisi</div>
+        </div>
+      </div>
+
+      <!-- Polaroid Fotoğraf Galerisi -->
+      <div id="content-photos-box" class="flex flex-col gap-3">
+        <div class="font-cinzel text-amber-200 font-bold text-xs">📸 Kapsüldeki Hatıralar</div>
+        <div id="content-photos-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- Alt Kısım -->
+      <div class="mt-8 pt-4 border-t border-white/10 flex justify-between items-center text-xs text-slate-400">
+        <span class="font-light">Zamanın yolculuğu tamamlandı ✨</span>
+        <button id="content-delete-btn" class="text-rose-400 hover:text-rose-300 font-cinzel text-xs underline">
+          Bu Kapsülü Sil 🗑️
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 8. PAROLA GİRİŞ MODALI (AÇILIŞ ONAYI) -->
+  <div id="modal-unlock-prompt" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="glass-panel w-full max-w-sm rounded-3xl p-6 text-center border-amber-400/50 shadow-2xl relative">
+      <button onclick="closeUnlockPrompt()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs transition">✕</button>
+
+      <div class="text-3xl mb-2">🔐</div>
+      <h3 class="text-base font-cinzel font-bold text-amber-100" id="unlock-prompt-title">Kapsülü Aç</h3>
+      <p class="text-[11px] text-slate-300 mt-1 mb-4">Bu kapsülün mührünü kırmak için oluşturulurken belirlenen parolayı girin.</p>
+
+      <form onsubmit="verifyAndRevealCapsule(event)" class="space-y-3">
+        <input type="password" id="unlock-password-input" required placeholder="Kapsül Parolası" class="w-full px-4 py-2.5 rounded-xl glass-input text-xs text-center">
+        <div id="unlock-error" class="text-xs text-rose-400 min-h-[1rem]"></div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-cinzel font-bold text-xs shadow-lg hover:brightness-105 transition">
+          Mührü Kır ve Oku ✨
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 9. SİLME ONAY MODALI (CONFIRM YERİNE GÜVENLİ ARAYÜZ) -->
+  <div id="modal-delete-confirm" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="glass-panel w-full max-w-xs rounded-3xl p-5 text-center border-rose-400/50 shadow-2xl">
+      <div class="text-2xl mb-1">🗑️</div>
+      <h3 class="text-sm font-cinzel font-bold text-rose-200">Kapsülü Sil</h3>
+      <p class="text-xs text-slate-300 my-3">Bu kapsülü silmek istediğine emin misin? Bu işlem geri alınamaz.</p>
+      
+      <div class="flex gap-2">
+        <button onclick="closeDeleteModal()" class="flex-1 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-cinzel text-xs transition">
+          Vazgeç
+        </button>
+        <button onclick="executeDeleteCapsule()" class="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-cinzel text-xs font-bold transition">
+          Evet, Sil
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Bildirim Konteyneri -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <footer class="max-w-4xl mx-auto w-full z-10 text-center text-xs text-slate-500 mt-8 pt-4 border-t border-white/5 font-light">
+    Zaman Kapsülü • Geleceğe Bırakılan Dijital Mühürlü Anılar ✨
+  </footer>
+
+  <script>
+    /* ========================================================
+       1. GLOBAL STATE & SESSION YÖNETİMİ
+    ======================================================== */
+    let currentUser = null;
+    let authTab = 'login';
+    let currentUploadedPhotos = [];
+    let liveCountdownInterval = null;
+    let pendingUnlockCapsule = null;
+    let capsuleToDeleteId = null;
+    let activeShareCode = '';
+
+    /* Gelişmiş Çoklu Depo Arama Fonksiyonu */
+    function findCapsuleById(id) {
+      if (!id) return null;
+      const targetId = String(id).trim().toUpperCase();
+
+      // 1. Aktif kullanıcının listesine bak
+      const userCaps = getUserCapsules();
+      let found = userCaps.find(c => 
+        (c.id && String(c.id).trim().toUpperCase() === targetId) || 
+        (c.code && String(c.code).trim().toUpperCase() === targetId)
+      );
+      if (found) return found;
+
+      // 2. Global havuza bak (nesne ve dizi formatlarını destekler)
+      const globalRaw = localStorage.getItem('zk_global_capsules');
+      if (globalRaw) {
+        try {
+          const globalCapsules = JSON.parse(globalRaw);
+          if (Array.isArray(globalCapsules)) {
+            found = globalCapsules.find(c => 
+              (c.id && String(c.id).trim().toUpperCase() === targetId) || 
+              (c.code && String(c.code).trim().toUpperCase() === targetId)
+            );
+            if (found) return found;
+          } else {
+            for (const key in globalCapsules) {
+              const cap = globalCapsules[key];
+              if (
+                (cap.id && String(cap.id).trim().toUpperCase() === targetId) || 
+                (cap.code && String(cap.code).trim().toUpperCase() === targetId)
+              ) {
+                return cap;
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Global kapsül okuma hatası", e);
+        }
+      }
+
+      // 3. localStorage'daki tüm diğer kullanıcıların kapsül listelerini de tara
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('zk_capsules_')) {
+          try {
+            const list = JSON.parse(localStorage.getItem(key) || '[]');
+            found = list.find(c => 
+              (c.id && String(c.id).trim().toUpperCase() === targetId) || 
+              (c.code && String(c.code).trim().toUpperCase() === targetId)
+            );
+            if (found) return found;
+          } catch (e) {}
+        }
+      }
+
+      return null;
+    }
+
+    function initAuth() {
+      const activeUser = localStorage.getItem('zk_active_user');
+      if (activeUser) {
+        authenticateSuccess(activeUser);
+      } else {
+        document.getElementById('auth-screen').classList.remove('hidden');
+        document.getElementById('main-app').classList.add('hidden');
+      }
+    }
+
+    function switchAuthTab(tab) {
+      authTab = tab;
+      const btnLog = document.getElementById('tab-login');
+      const btnReg = document.getElementById('tab-register');
+      const title = document.getElementById('auth-title');
+      const sub = document.getElementById('auth-subtitle');
+      const btnSubmit = document.getElementById('auth-submit-btn');
+      const msg = document.getElementById('auth-msg');
+      msg.innerText = '';
+
+      if (tab === 'login') {
+        btnLog.className = "flex-1 py-2 text-xs font-cinzel font-bold rounded-xl transition bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow";
+        btnReg.className = "flex-1 py-2 text-xs font-cinzel font-bold rounded-xl transition text-slate-300 hover:text-white";
+        title.innerText = "Zaman Kapsülü'ne Hoş Geldin";
+        sub.innerText = "Geleceğe gizli mektuplar mühürlemek için giriş yap.";
+        btnSubmit.innerText = "Kapsül Odasına Gir ✨";
+      } else {
+        btnReg.className = "flex-1 py-2 text-xs font-cinzel font-bold rounded-xl transition bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow";
+        btnLog.className = "flex-1 py-2 text-xs font-cinzel font-bold rounded-xl transition text-slate-300 hover:text-white";
+        title.innerText = "Yeni Gezgin Kaydı Oluştur";
+        sub.innerText = "Kendi geleceğine mektuplar bırakmak için bir hesap aç.";
+        btnSubmit.innerText = "Kayıt Ol ve Başla 🚀";
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const uField = document.getElementById('auth-username').value.trim();
+      const pField = document.getElementById('auth-password').value;
+      const msg = document.getElementById('auth-msg');
+
+      if (!uField || !pField) return;
+      const usersDB = JSON.parse(localStorage.getItem('zk_users_db') || '{}');
+
+      if (authTab === 'register') {
+        if (usersDB[uField]) {
+          msg.className = "text-xs font-medium text-center text-rose-400";
+          msg.innerText = "Bu gezgin adı zaten alınmış! Başka bir ad seç.";
+          return;
+        }
+        usersDB[uField] = { password: pField };
+        localStorage.setItem('zk_users_db', JSON.stringify(usersDB));
+
+        // En başta TAMAMEN BOŞ bir kapsül listesi ile başlatılır!
+        localStorage.setItem('zk_capsules_' + uField, JSON.stringify([]));
+
+        msg.className = "text-xs font-medium text-center text-emerald-300";
+        msg.innerText = "Kayıt başarılı! Mühürlü odaya giriliyor...";
+        setTimeout(() => authenticateSuccess(uField), 600);
+      } else {
+        if (!usersDB[uField] || usersDB[uField].password !== pField) {
+          msg.className = "text-xs font-medium text-center text-rose-400";
+          msg.innerText = "Hatalı kullanıcı adı veya şifre!";
+          return;
+        }
+        authenticateSuccess(uField);
+      }
+    }
+
+    function authenticateSuccess(user) {
+      currentUser = user;
+      localStorage.setItem('zk_active_user', user);
+      document.getElementById('display-user').innerText = user;
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+
+      switchView('list');
+      renderCapsules();
+      startLiveCountdowns();
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('zk_active_user');
+      document.getElementById('auth-username').value = '';
+      document.getElementById('auth-password').value = '';
+      document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      switchAuthTab('login');
+      clearInterval(liveCountdownInterval);
+    }
+
+    /* ========================================================
+       2. GÖRÜNÜM GEÇİŞLERİ (TABS)
+    ======================================================== */
+    function switchView(view) {
+      const vList = document.getElementById('view-list');
+      const vCreate = document.getElementById('view-create');
+      const btnList = document.getElementById('nav-btn-list');
+      const btnCreate = document.getElementById('nav-btn-create');
+
+      if (view === 'list') {
+        vList.classList.remove('hidden');
+        vCreate.classList.add('hidden');
+        btnList.className = "px-5 py-2.5 rounded-2xl font-cinzel font-bold text-xs transition flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-lg";
+        btnCreate.className = "px-5 py-2.5 rounded-2xl font-cinzel font-bold text-xs transition flex items-center gap-2 glass-panel text-amber-200 hover:text-white";
+        renderCapsules();
+      } else {
+        vCreate.classList.remove('hidden');
+        vList.classList.add('hidden');
+        btnCreate.className = "px-5 py-2.5 rounded-2xl font-cinzel font-bold text-xs transition flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-lg";
+        btnList.className = "px-5 py-2.5 rounded-2xl font-cinzel font-bold text-xs transition flex items-center gap-2 glass-panel text-amber-200 hover:text-white";
+      }
+    }
+
+    /* ========================================================
+       3. FOTOĞRAF OPTİMİZASYONU & ÖNİZLEME
+    ======================================================== */
+    function handlePhotoUpload(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800;
+            const scaleSize = MAX_WIDTH / img.width;
+            canvas.width = Math.min(img.width, MAX_WIDTH);
+            canvas.height = img.width > MAX_WIDTH ? img.height * scaleSize : img.height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+            currentUploadedPhotos.push(optimizedBase64);
+            renderPhotosPreview();
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
+    }
+
+    function renderPhotosPreview() {
+      const container = document.getElementById('photos-preview-gallery');
+      const label = document.getElementById('photo-count-label');
+      label.innerText = `${currentUploadedPhotos.length} fotoğraf seçildi`;
+      container.innerHTML = '';
+
+      currentUploadedPhotos.forEach((photo, idx) => {
+        const item = document.createElement('div');
+        item.className = "relative w-16 h-16 rounded-xl overflow-hidden border border-amber-400/40 group shadow";
+        item.innerHTML = `
+          <img src="${photo}" class="w-full h-full object-cover">
+          <button type="button" onclick="removePhoto(${idx})" class="absolute inset-0 bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-xs font-bold">
+            ✕
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function removePhoto(idx) {
+      currentUploadedPhotos.splice(idx, 1);
+      renderPhotosPreview();
+    }
+
+    /* ========================================================
+       4. KAPSÜL OLUŞTURMA & MÜHÜRLEME (KAPSÜL KODU İLE)
+    ======================================================== */
+    function generateUniqueCapsuleCode() {
+      const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+      let code = 'ZK-';
+      for (let i = 0; i < 4; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    }
+
+    function setQuickUnlockMinutes(mins) {
+      const target = new Date(Date.now() + mins * 60000);
+      formatAndSetUnlockInput(target);
+    }
+
+    function setQuickUnlockDays(days) {
+      const target = new Date(Date.now() + days * 24 * 60 * 60000);
+      formatAndSetUnlockInput(target);
+    }
+
+    function formatAndSetUnlockInput(dateObj) {
+      const tzOffset = dateObj.getTimezoneOffset() * 60000;
+      const localISOTime = (new Date(dateObj.getTime() - tzOffset)).toISOString().slice(0, 16);
+      document.getElementById('cap-unlock-date').value = localISOTime;
+    }
+
+    function handleCreateCapsule(e) {
+      e.preventDefault();
+      const title = document.getElementById('cap-title').value.trim();
+      const mood = document.getElementById('cap-mood').value;
+      const message = document.getElementById('cap-message').value.trim();
+      const song = document.getElementById('cap-song').value.trim();
+      const unlockDateVal = document.getElementById('cap-unlock-date').value;
+      const password = document.getElementById('cap-password').value.trim();
+
+      if (!title || !message || !unlockDateVal || !password) {
+        showToast('Lütfen tüm zorunlu alanları doldurun.', 'warn');
+        return;
+      }
+
+      const unlockTimestamp = new Date(unlockDateVal).getTime();
+      if (isNaN(unlockTimestamp) || unlockTimestamp <= Date.now()) {
+        showToast('Açılış tarihi gelecekteki bir zaman olmalıdır!', 'warn');
+        return;
+      }
+
+      const generatedCode = generateUniqueCapsuleCode();
+      const newCapsule = {
+        id: 'cap_' + Date.now(),
+        code: generatedCode,
+        title,
+        mood,
+        message,
+        song,
+        password,
+        creator: currentUser,
+        createdAt: Date.now(),
+        unlockAt: unlockTimestamp,
+        photos: [...currentUploadedPhotos]
+      };
+
+      // 1. Kullanıcının listesine ekle
+      const userCaps = getUserCapsules();
+      userCaps.unshift(newCapsule);
+      saveUserCapsules(userCaps);
+
+      // 2. Global havuza ekle (Kodu giren herkes anında bulabilsin)
+      saveToGlobalPool(newCapsule);
+
+      // Formu temizle
+      document.getElementById('cap-title').value = '';
+      document.getElementById('cap-message').value = '';
+      document.getElementById('cap-song').value = '';
+      document.getElementById('cap-password').value = '';
+      document.getElementById('cap-unlock-date').value = '';
+      currentUploadedPhotos = [];
+      renderPhotosPreview();
+
+      showToast(`🕯️ Kapsül mühürlendi! Kodu: ${generatedCode}`, 'success');
+      switchView('list');
+      // Paylaşım modalını aç
+      openShareCodeModal(newCapsule.code);
+    }
+
+    function getUserCapsules() {
+      if (!currentUser) return [];
+      const raw = localStorage.getItem('zk_capsules_' + currentUser);
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveUserCapsules(caps) {
+      if (!currentUser) return;
+      localStorage.setItem('zk_capsules_' + currentUser, JSON.stringify(caps));
+    }
+
+    function saveToGlobalPool(cap) {
+      try {
+        const raw = localStorage.getItem('zk_global_capsules');
+        let globalList = [];
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          globalList = Array.isArray(parsed) ? parsed : Object.values(parsed);
+        }
+        const idx = globalList.findIndex(c => c.id === cap.id || c.code === cap.code);
+        if (idx >= 0) {
+          globalList[idx] = cap;
+        } else {
+          globalList.unshift(cap);
+        }
+        localStorage.setItem('zk_global_capsules', JSON.stringify(globalList));
+      } catch (e) {
+        console.error("Global havuz kaydetme hatası:", e);
+      }
+    }
+
+    /* ========================================================
+       5. KAPSÜL KODU İLE BULMA VE SANDIĞA EKLEME
+    ======================================================== */
+    function openEnterCodeModal() {
+      document.getElementById('input-capsule-code').value = '';
+      document.getElementById('code-lookup-error').innerText = '';
+      document.getElementById('modal-enter-code').classList.remove('hidden');
+    }
+
+    function closeEnterCodeModal() {
+      document.getElementById('modal-enter-code').classList.add('hidden');
+    }
+
+    function handleCodeLookupSubmit(e) {
+      e.preventDefault();
+      const codeInput = document.getElementById('input-capsule-code').value.trim().toUpperCase();
+      const errEl = document.getElementById('code-lookup-error');
+      errEl.innerText = '';
+
+      if (!codeInput) return;
+
+      const foundCap = findCapsuleById(codeInput);
+      if (!foundCap) {
+        errEl.innerText = 'Bu koda ait bir mühürlü kapsül bulunamadı. Lütfen kontrol edin!';
+        return;
+      }
+
+      // Aktif kullanıcının listesine ekle
+      const myCaps = getUserCapsules();
+      const alreadyHas = myCaps.some(c => c.id === foundCap.id || c.code === foundCap.code);
+
+      if (alreadyHas) {
+        errEl.innerText = 'Bu kapsül zaten sandığınızda bulunuyor!';
+        return;
+      }
+
+      myCaps.unshift(foundCap);
+      saveUserCapsules(myCaps);
+
+      closeEnterCodeModal();
+      switchView('list');
+      renderCapsules();
+      showToast(`✨ "${foundCap.title}" kapsülü sandığınıza eklendi!`, 'success');
+    }
+
+    /* Paylaşım Kodu Modalı */
+    function openShareCodeModal(capCode) {
+      const cap = findCapsuleById(capCode);
+      if (!cap) return;
+
+      activeShareCode = cap.code || capCode;
+      document.getElementById('share-modal-title').innerText = cap.title;
+      document.getElementById('share-display-code').innerText = activeShareCode;
+      document.getElementById('share-display-unlock-date').innerText = `Açılış: ${new Date(cap.unlockAt).toLocaleString('tr-TR')}`;
+
+      document.getElementById('modal-code-share').classList.remove('hidden');
+    }
+
+    function closeShareCodeModal() {
+      activeShareCode = '';
+      document.getElementById('modal-code-share').classList.add('hidden');
+    }
+
+    function copyCurrentShareCode() {
+      if (!activeShareCode) return;
+      copyToClipboard(activeShareCode, true);
+    }
+
+    /* ========================================================
+       6. KAPSÜLLERİ LİSTELEME & %100 GİZLİLİK (TAM KORUMA)
+    ======================================================== */
+    function renderCapsules() {
+      const container = document.getElementById('capsules-grid');
+      const emptyState = document.getElementById('empty-state');
+      const badge = document.getElementById('capsule-count-badge');
+      const caps = getUserCapsules();
+
+      badge.innerText = caps.length;
+
+      if (!caps.length) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      container.innerHTML = '';
+
+      const now = Date.now();
+
+      caps.forEach(cap => {
+        const isUnlocked = now >= cap.unlockAt;
+        const totalDuration = Math.max(1000, cap.unlockAt - cap.createdAt);
+        const elapsed = Math.min(totalDuration, Math.max(0, now - cap.createdAt));
+        const progressRatio = Math.min(1, elapsed / totalDuration);
+
+        // Kum seviyeleri
+        const topSandHeight = Math.max(0, 24 * (1 - progressRatio));
+        const bottomSandHeight = Math.min(24, 24 * progressRatio);
+
+        const card = document.createElement('div');
+        card.className = "glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-between border-amber-400/30 hover:border-amber-400/60 transition shadow-xl relative overflow-hidden group";
+
+        card.innerHTML = `
+          <div>
+            <!-- Üst Rozet & Kapsül Kodu -->
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="text-[11px] px-2.5 py-0.5 rounded-full ${isUnlocked ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40' : 'bg-amber-500/20 text-amber-300 border border-amber-400/40'} font-cinzel font-bold flex items-center gap-1.5">
+                <span>${isUnlocked ? '🔓 Kilidi Açılabilir' : '🔒 Mühürlü & Gizli'}</span>
+              </span>
+              
+              <!-- Kapsül Kodu Etiketi (Tıklayınca kopyalar) -->
+              <button onclick="copyToClipboard('${cap.code || cap.id}', true)" title="Kodu Kopyala" class="px-2 py-0.5 rounded-lg bg-black/40 hover:bg-black/60 border border-amber-400/40 text-amber-300 font-mono text-[11px] font-bold transition flex items-center gap-1">
+                <span>🔑</span>
+                <span>${cap.code || 'ZK-ÖZEL'}</span>
+              </button>
+            </div>
+
+            <!-- Başlık -->
+            <h3 class="text-base sm:text-lg font-cinzel font-bold text-amber-100 group-hover:text-amber-300 transition line-clamp-1">
+              ${escapeHtml(cap.title)}
+            </h3>
+
+            <!-- Gizlilik Rozeti: Açılmadan önce şarkı, mektup ve fotoğraflar ASLA görünmez! -->
+            <div class="mt-1 flex items-center gap-1.5 text-[11px] text-amber-300/80">
+              ${isUnlocked ? `
+                <span class="text-emerald-400 font-semibold">✨ Mühür süresi tamamlandı. Parolayı girip anıları açabilirsin!</span>
+              ` : `
+                <span class="text-slate-400 italic">🔒 İçerik, şarkı ve fotoğraflar mühür açılana kadar tamamen gizlidir.</span>
+              `}
+            </div>
+
+            <!-- Dinamik Vektörel Kum Saati & Canlı Sayaç -->
+            <div class="my-4 p-3 rounded-2xl bg-black/40 border border-white/10 flex items-center gap-4">
+              
+              <!-- Canlı SVG Kum Saati -->
+              <div class="w-14 h-20 flex-shrink-0 relative flex items-center justify-center">
+                <svg viewBox="0 0 60 100" class="w-full h-full drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]">
+                  <!-- Cam Çerçeve -->
+                  <path d="M 12 10 L 48 10 C 48 35, 34 46, 32 50 C 34 54, 48 65, 48 90 L 12 90 C 12 65, 26 54, 28 50 C 26 46, 12 35, 12 10 Z" fill="rgba(255,255,255,0.06)" stroke="#f59e0b" stroke-width="2.5" stroke-linejoin="round" />
+                  
+                  <!-- Başlıklar -->
+                  <rect x="8" y="6" width="44" height="6" rx="3" fill="#ca8a04" stroke="#fef08a" stroke-width="0.7" />
+                  <rect x="8" y="88" width="44" height="6" rx="3" fill="#ca8a04" stroke="#fef08a" stroke-width="0.7" />
+
+                  <!-- ÜST HAZNEDEKİ KUM (Eksilen) -->
+                  <g clip-path="url(#clip-top-${cap.id})">
+                    <rect x="12" y="${42 - topSandHeight}" width="36" height="${topSandHeight + 4}" fill="url(#goldSandGrad)" />
+                  </g>
+                  <clipPath id="clip-top-${cap.id}">
+                    <path d="M 14 12 C 14 32, 26 44, 30 48 C 34 44, 46 32, 46 12 Z" />
+                  </clipPath>
+
+                  <!-- ORTADAKİ AKAN KUM ÇİZGİSİ -->
+                  ${!isUnlocked ? `
+                    <line x1="30" y1="46" x2="30" y2="82" stroke="#fef08a" stroke-width="2" stroke-linecap="round" class="sand-stream-anim" />
+                  ` : ''}
+
+                  <!-- ALT HAZNEDEKİ BİRİKEN KUM (Dolan) -->
+                  <g clip-path="url(#clip-bottom-${cap.id})">
+                    <rect x="12" y="${88 - bottomSandHeight}" width="36" height="${bottomSandHeight + 4}" fill="url(#goldSandGrad)" />
+                  </g>
+                  <clipPath id="clip-bottom-${cap.id}">
+                    <path d="M 30 52 C 26 56, 14 68, 14 88 L 46 88 C 46 68, 34 56, 30 52 Z" />
+                  </clipPath>
+
+                  <!-- Altın Kum Gradyanı -->
+                  <defs>
+                    <linearGradient id="goldSandGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#fef08a" />
+                      <stop offset="50%" stop-color="#eab308" />
+                      <stop offset="100%" stop-color="#ca8a04" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <!-- Sayaç Metinleri -->
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] uppercase font-cinzel tracking-wider text-slate-400">
+                  ${isUnlocked ? 'Zaman Doldu ✨' : 'Mührün Kırılmasına Kalan Süre'}
+                </div>
+                <div id="countdown-${cap.id}" class="text-xs sm:text-sm font-mono font-bold text-amber-200 mt-0.5">
+                  ${formatCountdownText(cap.unlockAt)}
+                </div>
+                <div class="text-[10px] text-slate-400 mt-1">
+                  Açılış: ${new Date(cap.unlockAt).toLocaleString('tr-TR')}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aksiyon Butonları -->
+          <div class="pt-2 border-t border-white/10 flex items-center gap-2">
+            ${isUnlocked ? `
+              <button onclick="promptUnlockCapsule('${cap.id}')" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-cinzel font-bold text-xs shadow-lg hover:brightness-105 active:scale-95 transition flex items-center justify-center gap-1.5">
+                <span>🔓</span> Mührü Kır & Oku
+              </button>
+            ` : `
+              <button disabled class="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-500 font-cinzel font-semibold text-xs cursor-not-allowed flex items-center justify-center gap-1.5">
+                <span>⏳</span> Süre Dolmadı
+              </button>
+            `}
+
+            <!-- Kodu Paylaş Butonu -->
+            <button onclick="openShareCodeModal('${cap.code || cap.id}')" title="Kapsül Kodunu Paylaş" class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 border border-amber-400/40 text-amber-200 text-xs font-cinzel transition flex items-center gap-1.5 shadow">
+              <span>💌</span> Kodu Paylaş
+            </button>
+
+            <!-- Kapsülü Sil Butonu -->
+            <button onclick="deleteCapsule('${cap.id}')" title="Kapsülü Sil" class="px-3 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/30 border border-rose-400/30 text-rose-300 text-xs transition">
+              🗑️
+            </button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    /* ========================================================
+       7. CANLI GERİ SAYIM MOTORU
+    ======================================================== */
+    function startLiveCountdowns() {
+      if (liveCountdownInterval) clearInterval(liveCountdownInterval);
+      liveCountdownInterval = setInterval(() => {
+        const caps = getUserCapsules();
+        let shouldRerender = false;
+
+        caps.forEach(cap => {
+          const el = document.getElementById(`countdown-${cap.id}`);
+          if (el) {
+            el.innerText = formatCountdownText(cap.unlockAt);
+          }
+          if (Date.now() >= cap.unlockAt && !cap._wasUnlocked) {
+            cap._wasUnlocked = true;
+            shouldRerender = true;
+          }
+        });
+
+        if (shouldRerender) {
+          renderCapsules();
+        }
+      }, 1000);
+    }
+
+    function formatCountdownText(targetTimestamp) {
+      const diff = targetTimestamp - Date.now();
+      if (diff <= 0) return "SÜRE TAMAMLANDI • AÇILABİLİR 🔓";
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      if (days > 0) {
+        return `${days} gün ${hours} sa ${minutes} dk ${seconds} sn`;
+      }
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    /* ========================================================
+       8. PAROLA DOĞRULAMA & MEKTUP AÇMA (SADECE ŞİFRE DOĞRUYSA)
+    ======================================================== */
+    function promptUnlockCapsule(id) {
+      const cap = findCapsuleById(id);
+      if (!cap) return;
+
+      pendingUnlockCapsule = cap;
+      document.getElementById('unlock-prompt-title').innerText = cap.title;
+      document.getElementById('unlock-password-input').value = '';
+      document.getElementById('unlock-error').innerText = '';
+      document.getElementById('modal-unlock-prompt').classList.remove('hidden');
+    }
+
+    function closeUnlockPrompt() {
+      pendingUnlockCapsule = null;
+      document.getElementById('modal-unlock-prompt').classList.add('hidden');
+    }
+
+    function verifyAndRevealCapsule(e) {
+      e.preventDefault();
+      const inputPass = document.getElementById('unlock-password-input').value.trim();
+      const errEl = document.getElementById('unlock-error');
+
+      if (!pendingUnlockCapsule) return;
+
+      if (inputPass !== pendingUnlockCapsule.password) {
+        errEl.innerText = "Hatalı parola! Lütfen tekrar deneyin.";
+        return;
+      }
+
+      const targetCap = pendingUnlockCapsule;
+      closeUnlockPrompt();
+      triggerConfetti();
+      revealCapsuleContent(targetCap);
+    }
+
+    function revealCapsuleContent(cap) {
+      if (!cap) return;
+
+      document.getElementById('content-modal-title').innerText = cap.title;
+      document.getElementById('content-modal-created').innerText = `Mühürlenme: ${new Date(cap.createdAt).toLocaleDateString('tr-TR')}`;
+      document.getElementById('content-modal-mood').innerText = `Ruh Hali: ${cap.mood || '✨'}`;
+      document.getElementById('content-modal-message').innerText = cap.message;
+
+      // Şarkı Kutusu (Sadece şimdi görünür)
+      const songBox = document.getElementById('content-song-box');
+      if (cap.song && cap.song.trim()) {
+        songBox.classList.remove('hidden');
+        document.getElementById('content-modal-song').innerText = cap.song;
+      } else {
+        songBox.classList.add('hidden');
+      }
+
+      // Polaroid Fotoğraflar (Sadece şimdi görünür)
+      const photosGrid = document.getElementById('content-photos-grid');
+      const photosBox = document.getElementById('content-photos-box');
+      photosGrid.innerHTML = '';
+
+      if (cap.photos && cap.photos.length > 0) {
+        photosBox.classList.remove('hidden');
+        cap.photos.forEach((photoUrl, i) => {
+          const polaroid = document.createElement('div');
+          polaroid.className = "bg-white p-3 pb-6 rounded-xl shadow-2xl rotate-1 hover:rotate-0 transition duration-300 text-slate-900";
+          polaroid.innerHTML = `
+            <div class="aspect-square w-full rounded-lg overflow-hidden bg-slate-100 mb-2">
+              <img src="${photoUrl}" class="w-full h-full object-cover">
+            </div>
+            <div class="text-[11px] font-letter text-center text-slate-600 italic">Hatıra #${i + 1}</div>
+          `;
+          photosGrid.appendChild(polaroid);
+        });
+      } else {
+        photosBox.classList.add('hidden');
+      }
+
+      // Sil butonu bağlantısı
+      document.getElementById('content-delete-btn').onclick = () => {
+        closeContentModal();
+        deleteCapsule(cap.id);
+      };
+
+      document.getElementById('modal-content').classList.remove('hidden');
+    }
+
+    function closeContentModal() {
+      document.getElementById('modal-content').classList.add('hidden');
+    }
+
+    function triggerConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    /* ========================================================
+       9. KAPSÜL SİLME
+    ======================================================== */
+    function deleteCapsule(id) {
+      capsuleToDeleteId = id;
+      document.getElementById('modal-delete-confirm').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      capsuleToDeleteId = null;
+      document.getElementById('modal-delete-confirm').classList.add('hidden');
+    }
+
+    function executeDeleteCapsule() {
+      if (!capsuleToDeleteId) return;
+      const caps = getUserCapsules().filter(c => c.id !== capsuleToDeleteId);
+      saveUserCapsules(caps);
+      closeDeleteModal();
+      renderCapsules();
+      showToast('🗑️ Kapsül sandığınızdan silindi.', 'info');
+    }
+
+    /* ========================================================
+       10. YARDIMCI BİLDİRİM VE YILDIZLAR
+    ======================================================== */
+    function showToast(text, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let borderCol = 'border-amber-400/40 text-amber-100';
+      if (type === 'success') borderCol = 'border-emerald-400/50 text-emerald-100 bg-emerald-950/80';
+      if (type === 'warn') borderCol = 'border-rose-400/50 text-rose-100 bg-rose-950/80';
+      if (type === 'info') borderCol = 'border-amber-400/40 text-amber-100 bg-slate-900/90';
+
+      toast.className = `px-4 py-2.5 rounded-2xl border ${borderCol} backdrop-blur-md shadow-2xl text-xs font-cinzel transition-all duration-300 pointer-events-auto transform translate-y-2 opacity-0 flex items-center gap-2`;
+      toast.innerText = text;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function copyToClipboard(text, notify = true) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+
+      if (notify) {
+        showToast(`📋 Kapsül Kodu "${text}" panoya kopyalandı!`, 'success');
+      }
+    }
+
+    function initStarfield() {
+      const container = document.getElementById('starfield');
+      for (let i = 0; i < 40; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-twinkle';
+        const size = Math.random() * 2.5 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = (Math.random() * 4) + 's';
+        star.style.animationDuration = (Math.random() * 3 + 2.5) + 's';
+        container.appendChild(star);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initStarfield();
+      initAuth();
+      setQuickUnlockDays(1);
+    });
+  </script>
+</body>
+</html>
